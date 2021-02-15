@@ -44,6 +44,9 @@ public class SignupController {
             model.addAttribute("signupError", signupError);
         }
 
+        if (signupError == null) {
+            return "login";
+        }
         return "signup";
     }
 }

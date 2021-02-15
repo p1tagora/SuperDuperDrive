@@ -3,6 +3,7 @@ package com.udacity.jwdnd.course1.cloudstorage.controller;
 import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.model.CredentialForm;
 import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
+import com.udacity.jwdnd.course1.cloudstorage.services.ResultService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -15,10 +16,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class CredentialController {
     private final CredentialService credentialService;
     private final UserService userService;
+    private final ResultService resultService;
 
-    public CredentialController(CredentialService credentialService, UserService userService) {
+    public CredentialController(CredentialService credentialService, UserService userService, ResultService resultService) {
         this.credentialService = credentialService;
         this.userService = userService;
+        this.resultService = resultService;
     }
 
     @PostMapping("/home/credential-add")
@@ -36,13 +39,15 @@ public class CredentialController {
             this.credentialService.createCredential(credential);
         }
         model.addAttribute("credentialsList", this.credentialService.getCredentialFormsList(userid));
-        return "redirect:/home#nav-credentials";
+        model.addAttribute("status", this.resultService.resultSuccess);
+        return "result";
     }
 
     @PostMapping("/home/credential-delete")
     public String credentialDelete(Authentication authentication, @RequestParam("credentialid") Integer credentialid, Model model) {
         this.credentialService.deleteCredential(credentialid);
         model.addAttribute("credentialsList", this.credentialService.getCredentialFormsList(this.userService.getUser(authentication.getName()).getUserid()));
-        return "redirect:/home#nav-credentials";
+        model.addAttribute("status", this.resultService.resultSuccess);
+        return "result";
     }
 }

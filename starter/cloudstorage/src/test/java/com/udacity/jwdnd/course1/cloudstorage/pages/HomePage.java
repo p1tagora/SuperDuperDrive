@@ -80,13 +80,11 @@ public class HomePage {
     @FindBy(id = "credential-password")
     private WebElement credentialPasswordInputField;
 
-    private final WebDriver driver;
     private final JavascriptExecutor js;
     private final WebDriverWait wait;
 
     public HomePage(WebDriver webDriver) {
         PageFactory.initElements(webDriver, this);
-        this.driver = webDriver;
         this.js = (JavascriptExecutor) webDriver;
         this.wait = new WebDriverWait(webDriver, 10);
     }

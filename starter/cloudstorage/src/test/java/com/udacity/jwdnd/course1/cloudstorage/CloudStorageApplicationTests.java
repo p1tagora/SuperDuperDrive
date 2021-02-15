@@ -4,6 +4,7 @@ import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import com.udacity.jwdnd.course1.cloudstorage.pages.HomePage;
 import com.udacity.jwdnd.course1.cloudstorage.pages.LoginPage;
+import com.udacity.jwdnd.course1.cloudstorage.pages.ResultPage;
 import com.udacity.jwdnd.course1.cloudstorage.pages.SignupPage;
 import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.services.EncryptionService;
@@ -116,11 +117,15 @@ class CloudStorageApplicationTests {
 		loginPage.login(username, password);
 
 		HomePage homePage = new HomePage(driver);
+		ResultPage resultPage;
 
 		//Test adding a note
 		noteTitle = "Test Add Note Title";
 		noteDescription = "Test Add Note Description";
 		homePage.addNote(noteTitle, noteDescription);
+		resultPage = new ResultPage(driver);
+		resultPage.clickAfterSuccess();
+		driver.get(baseURL + "/home");
 		testNote = homePage.readNote();
 		Assertions.assertEquals(noteTitle, testNote.getNotetitle());
 		Assertions.assertEquals(noteDescription, testNote.getNotedescription());
@@ -129,6 +134,9 @@ class CloudStorageApplicationTests {
 		noteTitle = "Test Edit Note Title";
 		noteDescription = "Test Edit Note Description";
 		homePage.editNote(noteTitle, noteDescription);
+		resultPage = new ResultPage(driver);
+		resultPage.clickAfterSuccess();
+		driver.get(baseURL + "/home");
 		testNote = homePage.readNote();
 		Assertions.assertEquals(noteTitle, testNote.getNotetitle());
 		Assertions.assertEquals(noteDescription, testNote.getNotedescription());
@@ -136,6 +144,8 @@ class CloudStorageApplicationTests {
 		//Test deleting a note
 		Assertions.assertEquals(homePage.noteExists(), true);
 		homePage.deleteNote();
+		resultPage.clickAfterSuccess();
+		driver.get(baseURL + "/home");
 		Assertions.assertEquals(homePage.noteExists(), false);
 
 		homePage.logout();
@@ -159,38 +169,51 @@ class CloudStorageApplicationTests {
 		loginPage.login(username, password);
 
 		HomePage homePage = new HomePage(driver);
+		ResultPage resultPage;
 
 		//Test adding a credential
 		credentialUrl = "http://localhost:8080/";
 		credentialUsername = "testUser";
 		credentialPassword = "testPassword";
 		homePage.addCredential(credentialUrl, credentialUsername, credentialPassword);
+		resultPage = new ResultPage(driver);
+		resultPage.clickAfterSuccess();
+		driver.get(baseURL + "/home");
 
 		//check that the password is not the same as initial one (it was encrypted)
 		testCredential = homePage.readCredential();
 		Assertions.assertEquals(credentialUrl, testCredential.getUrl());
 		Assertions.assertEquals(credentialUsername, testCredential.getUsername());
 		Assertions.assertNotEquals(credentialPassword, testCredential.getPassword());
+		driver.get(baseURL + "/home");
 
 		//check that the password is the same as the initial one (decrypted)
 		testCredential = homePage.readCredentialFromEditMode();
 		Assertions.assertEquals(credentialUrl, testCredential.getUrl());
 		Assertions.assertEquals(credentialUsername, testCredential.getUsername());
 		Assertions.assertEquals(credentialPassword, testCredential.getPassword());
+		driver.get(baseURL + "/home");
 
 		//Test editing a credential
 		credentialUrl = "http://localhost:8080/edited/";
 		credentialUsername = "testEditedUser";
 		credentialPassword = "testEditedPassword";
 		homePage.editCredential(credentialUrl, credentialUsername, credentialPassword);
+		resultPage = new ResultPage(driver);
+		resultPage.clickAfterSuccess();
+		driver.get(baseURL + "/home");
 		testCredential = homePage.readCredentialFromEditMode();
 		Assertions.assertEquals(credentialUrl, testCredential.getUrl());
 		Assertions.assertEquals(credentialUsername, testCredential.getUsername());
 		Assertions.assertEquals(credentialPassword, testCredential.getPassword());
+		driver.get(baseURL + "/home");
 
 		//Test deleting a credential
 		Assertions.assertEquals(homePage.credentialExists(), true);
 		homePage.deleteCredential();
+		resultPage = new ResultPage(driver);
+		resultPage.clickAfterSuccess();
+		driver.get(baseURL + "/home");
 		Assertions.assertEquals(homePage.credentialExists(), false);
 
 		homePage.logout();

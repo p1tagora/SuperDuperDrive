@@ -1,14 +1,9 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.CredentialForm;
-import com.udacity.jwdnd.course1.cloudstorage.model.File;
-import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import com.udacity.jwdnd.course1.cloudstorage.model.NoteForm;
-import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
-import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
-import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
+import com.udacity.jwdnd.course1.cloudstorage.services.*;
 
-import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +17,7 @@ public class HomeController {
     private final NoteService noteService;
     private final UserService userService;
 
-    public HomeController(FileService fileService, CredentialService credentialService, NoteService noteService, UserService userService) {
+    public HomeController(FileService fileService, CredentialService credentialService, NoteService noteService, UserService userService, ResultService resultService) {
         this.fileService = fileService;
         this.credentialService = credentialService;
         this.noteService = noteService;
@@ -43,7 +38,7 @@ public class HomeController {
     @PostMapping("/logout")
     public String doLogout(Authentication authentication) {
         authentication.setAuthenticated(false);
-        return "forward:/login";
+        return "login";
     }
 
 }

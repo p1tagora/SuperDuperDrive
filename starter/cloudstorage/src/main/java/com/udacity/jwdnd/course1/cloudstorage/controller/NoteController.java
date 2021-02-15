@@ -3,6 +3,7 @@ package com.udacity.jwdnd.course1.cloudstorage.controller;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import com.udacity.jwdnd.course1.cloudstorage.model.NoteForm;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
+import com.udacity.jwdnd.course1.cloudstorage.services.ResultService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -15,10 +16,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class NoteController {
     private final NoteService noteService;
     private final UserService userService;
+    private final ResultService resultService;
 
-    public NoteController(NoteService noteService, UserService userService) {
+    public NoteController(NoteService noteService, UserService userService, ResultService resultService) {
         this.noteService = noteService;
         this.userService = userService;
+        this.resultService = resultService;
     }
 
     @PostMapping("/home/note-add")
@@ -35,13 +38,15 @@ public class NoteController {
             this.noteService.createNote(note);
         }
         model.addAttribute("notesList", this.noteService.getNoteFormsList(userid));
-        return "redirect:/home#nav-notes";
+        model.addAttribute("status", this.resultService.resultSuccess);
+        return "result";
     }
 
     @PostMapping("/home/note-delete")
     public String noteDelete(Authentication authentication, @RequestParam("noteid") Integer noteid, Model model) {
         this.noteService.deleteNote(noteid);
         model.addAttribute("notesList", this.noteService.getNoteFormsList(this.userService.getUser(authentication.getName()).getUserid()));
-        return "redirect:/home#nav-notes";
+        model.addAttribute("status", this.resultService.resultSuccess);
+        return "result";
     }
 }

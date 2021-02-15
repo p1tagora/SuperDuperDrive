@@ -2,6 +2,7 @@ package com.udacity.jwdnd.course1.cloudstorage.controller;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.File;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
+import com.udacity.jwdnd.course1.cloudstorage.services.ResultService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -19,23 +20,25 @@ import java.io.IOException;
 public class FileController {
     private final FileService fileService;
     private final UserService userService;
+    private final ResultService resultService;
 
-    public FileController(FileService fileService, UserService userService) {
+    public FileController(FileService fileService, UserService userService, ResultService resultService) {
         this.fileService = fileService;
         this.userService = userService;
+        this.resultService = resultService;
     }
 
     @PostMapping("/home/file-upload")
     public String uploadFile(Authentication authentication, @RequestParam("fileUpload") MultipartFile fileUpload, Model model) {
         if (fileUpload.isEmpty()) {
-            //TODO - error handling
-            return "redirect:/home";
+            model.addAttribute("status", this.resultService.resultEmptyFile);
+            return "result";
         }
         String filename = fileUpload.getOriginalFilename();
         Integer userid = this.userService.getUser(authentication.getName()).getUserid();
         if (this.fileService.getFile(filename, userid) != null) {
-            //TODO - error handling
-            return "redirect:/home";
+            model.addAttribute("status", this.resultService.resultDuplicateFile);
+            return "result";
         }
 
         File file = new File();
@@ -51,7 +54,8 @@ public class FileController {
 
         this.fileService.createFile(file);
         model.addAttribute("filesList", this.fileService.getFileFormsList(file.getUserid()));
-        return "redirect:/home";
+        model.addAttribute("status", this.resultService.resultSuccess);
+        return "result";
     }
 
     @GetMapping(value="/home/file-view")
@@ -74,6 +78,7 @@ public class FileController {
         Integer userid = this.userService.getUser(authentication.getName()).getUserid();
         this.fileService.deleteFile(filename, userid);
         model.addAttribute("filesList", this.fileService.getFileFormsList(userid));
-        return "redirect:/home";
+        model.addAttribute("status", this.resultService.resultSuccess);
+        return "result";
     }
 }
