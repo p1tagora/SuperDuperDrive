@@ -12,6 +12,7 @@ import java.util.List;
 @Service
 public class FileService {
     private final FileMapper fileMapper;
+    public final Integer MAX_PERMITTED_SIZE = 1048576;
 
     public FileService(FileMapper fileMapper) {
         this.fileMapper = fileMapper;

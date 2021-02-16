@@ -22,6 +22,10 @@
                 <h1 class="display-5">Error</h1>
                 <span>File already exists. Click <a id="a_file_exists" th:href="@{/home}">here</a> to continue.</span>
             </div>
+            <div th:if="${status == 'fileTooLarge'}" class="alert alert-danger fill-parent">
+                <h1 class="display-5">Error</h1>
+                <span>The file exceeds its maximum permitted size of 1048576 bytes. Click <a id="a_file_too_large" th:href="@{/home}">here</a> to continue.</span>
+            </div>
             <div th:if="${status == 'fail'}" class="alert alert-danger fill-parent">
                 <h1 class="display-5">Error</h1>
                 <span>Your changes were not saved. Click <a id="a_fail" th:href="@{/home}">here</a> to continue.</span>

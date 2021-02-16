@@ -10,4 +10,5 @@ public class ResultService {
     public final String resultFail = "fail";
     public final String resultEmptyFile = "emptyFile";
     public final String resultDuplicateFile = "duplicateFile";
+    public final String resultFileTooLarge = "fileTooLarge";
 }
